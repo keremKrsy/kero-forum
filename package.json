@@ -1,0 +1,31 @@
+{
+  "name": "kero-forum",
+  "version": "3.0.0",
+  "description": "Kero-Forum - Secure forum template with Owner, Admin, Mod roles",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "reset": "node scripts/reset.js",
+    "stop": "node scripts/stop.js"
+  },
+  "keywords": ["forum", "kero-forum", "security", "template", "express"],
+  "license": "MIT",
+  "engines": { "node": ">=18.0.0" },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.7.0",
+    "connect-sqlite3": "^0.9.15",
+    "csurf": "^1.11.0",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "express-session": "^1.18.1",
+    "express-validator": "^7.2.1",
+    "helmet": "^8.0.0",
+    "hpp": "^0.2.3",
+    "sanitize-html": "^2.14.0",
+    "uuid": "^11.0.5"
+  }
+}

@@ -1,0 +1,28 @@
+<%- include('../partials/header') %>
+
+<div class="page-header"><h1>Word Filters</h1></div>
+<%- include('../partials/admin-nav') %>
+<% if (msg) { %><div class="alert alert-success toast-msg"><%= msg %></div><% } %>
+
+<form action="/admin/filters" method="POST" class="card glass" style="margin-bottom:1.5rem;">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <div class="form-row">
+    <div class="form-group"><label>Pattern (regex)</label><input type="text" name="pattern" required placeholder="badword"></div>
+    <div class="form-group"><label>Replacement</label><input type="text" name="replacement" value="***"></div>
+  </div>
+  <button type="submit" class="btn btn-primary">Add Filter</button>
+</form>
+
+<div class="panel glass">
+  <% filters.forEach(function(f) { %>
+    <div class="category-admin-item flex-between">
+      <span><code><%= f.pattern %></code> → <%= f.replacement %></span>
+      <form action="/admin/filters/<%= f.id %>/delete" method="POST" class="inline-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+      </form>
+    </div>
+  <% }); %>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,11 @@
+<%- include('partials/header') %>
+
+<div class="auth-page">
+  <div class="auth-card" style="text-align:center;">
+    <h1><%= typeof code !== 'undefined' ? code : 'Error' %></h1>
+    <p class="auth-subtitle"><%= message %></p>
+    <a href="/" class="btn btn-primary" style="margin-top:1rem;">Back to Home</a>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

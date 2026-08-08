@@ -1,0 +1,132 @@
+<%- include('../partials/header') %>
+
+<div class="page-header flex-between">
+  <div>
+    <h1><%= topic.title %></h1>
+    <p class="breadcrumb">
+      <a href="/">Home</a> ›
+      <a href="/category/<%= topic.category_slug %>"><%= topic.category_name %></a> ›
+      Topic
+    </p>
+    <p class="topic-meta">
+      <a href="<%= profileUrl(topic.username) %>"><%= topic.username %></a>
+      · <%= topic.view_count %> views
+      <% if (topic.is_locked) { %> · <span class="locked">🔒 Locked</span><% } %>
+      <% if (topic.is_pinned) { %> · <span class="pinned">📌 Pinned</span><% } %>
+    </p>
+  </div>
+  <div class="actions-row">
+    <% if (user) { %>
+      <form action="/topic/<%= topic.id %>/bookmark" method="POST" class="inline-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit" class="btn btn-ghost btn-sm"><%= bookmarked ? '★ Saved' : '☆ Save' %></button>
+      </form>
+      <form action="/member/topic/<%= topic.id %>/watch" method="POST" class="inline-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit" class="btn btn-ghost btn-sm"><%= watched ? '👁 Watching' : '👁 Watch' %></button>
+      </form>
+    <% } %>
+    <% if (hasRole('mod')) { %>
+      <form action="/topic/<%= topic.id %>/pin" method="POST" class="inline-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit" class="btn btn-ghost btn-sm"><%= topic.is_pinned ? 'Unpin' : 'Pin' %></button>
+      </form>
+      <form action="/topic/<%= topic.id %>/lock" method="POST" class="inline-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit" class="btn btn-ghost btn-sm"><%= topic.is_locked ? 'Unlock' : 'Lock' %></button>
+      </form>
+      <form action="/topic/<%= topic.id %>/delete" method="POST" class="inline-form" onsubmit="return confirm('Delete this topic?')">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+      </form>
+    <% } %>
+  </div>
+</div>
+
+<div class="panel glass">
+  <% posts.forEach(function(post) { %>
+    <article class="post" id="post-<%= post.id %>">
+      <div class="post-sidebar">
+        <a href="<%= profileUrl(post.username) %>" class="post-avatar-link">
+          <span class="avatar avatar-md" style="background:<%= post.avatar_color || '#f5f0e8' %>"><%= post.username.charAt(0).toUpperCase() %></span>
+        </a>
+        <a href="<%= profileUrl(post.username) %>" class="post-author"><%= post.username %></a>
+        <span class="role-badge role-<%= post.author_role %>"><%= roleBadge(post.author_role) %></span>
+        <div class="post-date"><%= new Date(post.created_at).toLocaleString('en-US') %></div>
+        <% if (post.is_edited) { %><div class="post-date">(edited)</div><% } %>
+      </div>
+      <div class="post-body">
+        <div class="post-content"><%- post.content %></div>
+        <div class="post-actions">
+          <% if (user) { %>
+            <form action="/member/post/<%= post.id %>/react" method="POST" class="inline-form">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <input type="hidden" name="reaction" value="like">
+              <button type="submit" class="btn btn-ghost btn-sm">
+                👍 Like (<%= postLikes[post.id] || 0 %>)
+              </button>
+            </form>
+            <form action="/member/report" method="POST" class="inline-form">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <input type="hidden" name="targetType" value="post">
+              <input type="hidden" name="targetId" value="<%= post.id %>">
+              <input type="text" name="reason" required minlength="3" maxlength="500" placeholder="Report reason">
+              <button type="submit" class="btn btn-ghost btn-sm">Report</button>
+            </form>
+            <% const canEditOwnPost = user.id === post.user_id && (Date.now() - new Date(post.created_at).getTime()) <= 1800000; %>
+            <% if (canEditOwnPost) { %>
+              <form action="/member/post/<%= post.id %>/edit" method="POST" class="inline-form" style="display:block;width:100%;margin-top:.5rem;">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <textarea name="content" required minlength="2" maxlength="10000" rows="3" style="width:100%;"><%= post.content.replace(/<[^>]+>/g, '') %></textarea>
+                <button type="submit" class="btn btn-ghost btn-sm">Edit Post</button>
+              </form>
+            <% } %>
+          <% } %>
+          <% if (hasRole('mod')) { %>
+            <form action="/post/<%= post.id %>/delete" method="POST" class="inline-form" onsubmit="return confirm('Delete this post?')">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            </form>
+          <% } %>
+        </div>
+      </div>
+    </article>
+  <% }); %>
+</div>
+
+<div id="bottom" class="card glass reply-box">
+  <% if (!user) { %>
+    <p>To reply, <a href="/auth/login">log in</a> or <a href="/auth/register">register</a>.</p>
+  <% } else if (topic.is_locked && !hasRole('mod')) { %>
+    <p class="alert alert-info">This topic is locked and cannot receive replies.</p>
+  <% } else { %>
+    <h3>Write a Reply</h3>
+    <form action="/topic/<%= topic.id %>/reply" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="form-group">
+        <textarea name="content" required minlength="2" maxlength="10000" placeholder="Share your thoughts..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Post Reply</button>
+    </form>
+  <% } %>
+</div>
+
+<% if (user) { %>
+  <div class="card glass reply-box" style="margin-top:1rem;">
+    <h3>Report Topic</h3>
+    <form action="/member/report" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="hidden" name="targetType" value="topic">
+      <input type="hidden" name="targetId" value="<%= topic.id %>">
+      <div class="form-group">
+        <input type="text" name="reason" required minlength="3" maxlength="500" placeholder="Reason for report">
+      </div>
+      <div class="form-group">
+        <textarea name="details" maxlength="500" placeholder="Additional details (optional)"></textarea>
+      </div>
+      <button type="submit" class="btn btn-ghost">Submit Report</button>
+    </form>
+  </div>
+<% } %>
+
+<%- include('../partials/footer') %>

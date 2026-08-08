@@ -1,0 +1,50 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <h1>Search</h1>
+  <p>Search topics and posts</p>
+</div>
+
+<form action="/search" method="GET" class="search-page-form card glass">
+  <input type="search" name="q" value="<%= query %>" placeholder="At least 2 characters..." minlength="2" maxlength="100" autofocus>
+  <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<% if (query.length >= 2) { %>
+  <div class="search-results">
+    <h2>Topics (<%= results.topics.length %>)</h2>
+    <% if (results.topics.length === 0) { %>
+      <p class="text-muted">No topics found.</p>
+    <% } else { %>
+      <ul class="topic-list">
+        <% results.topics.forEach(function(t) { %>
+          <li class="topic-item">
+            <div>
+              <div class="topic-title"><a href="/topic/<%= t.id %>"><%= t.title %></a></div>
+              <div class="topic-meta"><%= t.category_name %> · <a href="<%= profileUrl(t.username) %>"><%= t.username %></a></div>
+            </div>
+          </li>
+        <% }); %>
+      </ul>
+    <% } %>
+
+    <h2 style="margin-top:2rem;">Posts (<%= results.posts.length %>)</h2>
+    <% if (results.posts.length === 0) { %>
+      <p class="text-muted">No posts found.</p>
+    <% } else { %>
+      <ul class="activity-list">
+        <% results.posts.forEach(function(p) { %>
+          <li class="activity-item">
+            <a href="/topic/<%= p.topic_id %>"><%= p.topic_title %></a>
+            <p class="search-snippet"><%- p.content.replace(/<[^>]+>/g, '').slice(0, 120) %>...</p>
+            <span class="topic-meta"><a href="<%= profileUrl(p.username) %>"><%= p.username %></a></span>
+          </li>
+        <% }); %>
+      </ul>
+    <% } %>
+  </div>
+<% } else if (query.length > 0) { %>
+  <div class="alert alert-info">Enter at least 2 characters to search.</div>
+<% } %>
+
+<%- include('../partials/footer') %>

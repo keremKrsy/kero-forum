@@ -1,0 +1,37 @@
+<%- include('../partials/header') %>
+
+<div class="page-header flex-between">
+  <div>
+    <h1>Notifications</h1>
+    <p>All your activity in one place</p>
+  </div>
+  <% if (notifications.some(n => !n.is_read)) { %>
+    <form action="/notifications/read-all" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button type="submit" class="btn btn-ghost btn-sm">Mark All as Read</button>
+    </form>
+  <% } %>
+</div>
+
+<div class="panel glass">
+  <% if (notifications.length === 0) { %>
+    <div class="empty-state">No notifications yet.</div>
+  <% } else { %>
+    <ul class="notif-list">
+      <% notifications.forEach(function(n) { %>
+        <li class="notif-item <%= n.is_read ? 'read' : 'unread' %>">
+          <div class="notif-dot"></div>
+          <div class="notif-body">
+            <p><%= n.message %></p>
+            <span class="topic-meta"><%= new Date(n.created_at).toLocaleString('en-US') %></span>
+          </div>
+          <% if (n.link) { %>
+            <a href="<%= n.link %>" class="btn btn-ghost btn-sm">View</a>
+          <% } %>
+        </li>
+      <% }); %>
+    </ul>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

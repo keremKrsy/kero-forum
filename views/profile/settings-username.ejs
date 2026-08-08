@@ -1,0 +1,29 @@
+<%- include('../partials/header') %>
+
+<div class="settings-layout">
+  <%- include('../partials/settings-nav') %>
+  <div class="settings-content">
+    <div class="settings-header">
+      <h1>Username</h1>
+      <p>Enter your current password to change your username</p>
+    </div>
+    <% if (success) { %><div class="alert alert-success toast-msg"><%= success %></div><% } %>
+    <% if (error) { %><div class="alert alert-error toast-msg"><%= error %></div><% } %>
+
+    <form action="/settings/username" method="POST" class="card glass settings-form">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="form-group">
+        <label for="username">New Username</label>
+        <input type="text" id="username" name="username" value="<%= profile.username %>" required minlength="3" maxlength="32" pattern="[a-zA-Z0-9_]+">
+        <p class="form-hint">Letters, numbers, and underscore only</p>
+      </div>
+      <div class="form-group">
+        <label for="password">Current Password</label>
+        <input type="password" id="password" name="password" required minlength="6" autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maintenance | <%= siteName %></title>
+  <link rel="stylesheet" href="/css/kero.css">
+</head>
+<body class="maintenance-body">
+  <div class="bg-mesh"></div>
+  <div class="maintenance-wrap">
+    <div class="maintenance-card glass">
+      <span class="logo-mark lg">K</span>
+      <h1>Under Maintenance</h1>
+      <p class="maintenance-msg"><%= message %></p>
+      <p class="text-muted">Only Owners and Admins can access the site while maintenance mode is active.</p>
+      <div class="maintenance-actions">
+        <a href="/auth/login" class="btn btn-primary">Staff Sign In</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

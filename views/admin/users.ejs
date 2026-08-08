@@ -1,0 +1,75 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <h1>User Management</h1>
+  <p>Role assignment and bans</p>
+</div>
+<%- include('../partials/admin-nav') %>
+
+<% if (msg) { %><div class="alert alert-success toast-msg"><%= msg %></div><% } %>
+<% if (error) { %><div class="alert alert-error toast-msg"><%= error %></div><% } %>
+
+<div class="panel glass">
+  <div class="panel-body table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Last Login</th>
+          <th>IP</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach(function(u) { %>
+          <tr>
+            <td><%= u.id %></td>
+            <td>
+              <a href="<%= profileUrl(u.username) %>"><%= u.username %></a>
+              <br><small style="color:var(--cream-muted)"><%= u.email %></small>
+            </td>
+            <td><span class="role-badge role-<%= u.role %>"><%= roleBadge(u.role) %></span></td>
+            <td><% if (u.is_banned) { %><span class="badge-blocked">Banned</span><% } else { %><span class="badge-ok">Active</span><% } %></td>
+            <td><%= u.last_login_at ? new Date(u.last_login_at).toLocaleString('en-US') : '—' %></td>
+            <td><%= u.last_ip || '—' %></td>
+            <td>
+              <div class="actions-row">
+                <% if (u.role !== 'owner' && u.id !== user.id && hasRole('admin')) { %>
+                  <form action="/admin/users/<%= u.id %>/role" method="POST" class="role-form">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <select name="role">
+                      <option value="user" <%= u.role === 'user' ? 'selected' : '' %>>Member</option>
+                      <option value="mod" <%= u.role === 'mod' ? 'selected' : '' %>>Mod</option>
+                      <% if (isOwner) { %>
+                        <option value="admin" <%= u.role === 'admin' ? 'selected' : '' %>>Admin</option>
+                      <% } %>
+                    </select>
+                    <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                  </form>
+                <% } %>
+                <% if (!u.is_banned && u.role !== 'owner' && (isOwner || u.role !== 'admin')) { %>
+                  <form action="/admin/users/<%= u.id %>/ban" method="POST" class="inline-form">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <input type="text" name="reason" placeholder="Reason" required minlength="3" style="width:100px;padding:0.3rem;">
+                    <button type="submit" class="btn btn-danger btn-sm">Ban</button>
+                  </form>
+                <% } %>
+                <% if (u.is_banned) { %>
+                  <form action="/admin/users/<%= u.id %>/unban" method="POST" class="inline-form">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <button type="submit" class="btn btn-ghost btn-sm">Unban</button>
+                  </form>
+                <% } %>
+              </div>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

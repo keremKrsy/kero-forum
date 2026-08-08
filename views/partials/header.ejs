@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kero-Forum - Secure forum platform">
+  <title><%= typeof title !== 'undefined' ? title + ' | ' : '' %><%= siteName %></title>
+  <link rel="stylesheet" href="/css/kero.css">
+</head>
+<body>
+  <div class="bg-mesh"></div>
+  <% if (siteAnnouncement) { %><div class="site-announcement"><%= siteAnnouncement %></div><% } %>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="logo">
+        <span class="logo-mark">K</span>
+        <span class="logo-text"><%= siteName %></span>
+      </a>
+      <form action="/search" method="GET" class="header-search">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="search" name="q" placeholder="Search topics..." maxlength="100" aria-label="Search">
+      </form>
+      <nav class="main-nav" id="mainNav">
+        <a href="/" class="nav-link <%= currentPath === '/' ? 'active' : '' %>">Home</a>
+        <a href="/member/leaderboard" class="nav-link">Members</a>
+        <% if (user) { %>
+          <a href="/settings/bookmarks" class="nav-link">Saved</a>
+          <% if (hasRole('mod')) { %><a href="/admin" class="nav-link <%= currentPath.startsWith('/admin') ? 'active' : '' %>">Admin</a><% } %>
+          <a href="/notifications" class="nav-notif" title="Notifications">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <% if (unreadNotifications > 0) { %><span class="notif-badge"><%= unreadNotifications > 9 ? '9+' : unreadNotifications %></span><% } %>
+          </a>
+          <div class="user-menu" id="userMenu">
+            <button type="button" class="user-menu-trigger" aria-expanded="false">
+              <span class="avatar avatar-sm" style="background:<%= user.avatar_color || '#f5f0e8' %>"><%= user.username.charAt(0).toUpperCase() %></span>
+              <span class="user-menu-name"><%= user.display_name || user.username %></span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="user-menu-dropdown">
+              <div class="dropdown-header">
+                <span class="role-badge role-<%= user.role %>"><%= roleBadge(user.role) %></span>
+                <strong><%= user.username %></strong>
+              </div>
+              <a href="<%= profileUrl(user.username) %>">My Profile</a>
+              <a href="/settings/profile">Account Settings</a>
+              <a href="/member/activity">My Activity</a>
+              <a href="/member/export-data">Export My Data</a>
+              <a href="/notifications">Notifications</a>
+              <% if (hasRole('mod')) { %><a href="/admin">Admin Panel</a><% } %>
+              <div class="dropdown-divider"></div>
+              <form action="/auth/logout" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit" class="dropdown-logout">Sign Out</button>
+              </form>
+            </div>
+          </div>
+        <% } else { %>
+          <a href="/auth/login" class="nav-link">Sign In</a>
+          <a href="/auth/register" class="btn btn-primary btn-sm">Register</a>
+        <% } %>
+      </nav>
+      <button type="button" class="mobile-toggle" id="mobileToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+  <main class="site-main">
+    <div class="container">

@@ -1,0 +1,18 @@
+<%- include('../partials/header') %>
+
+<div class="page-header"><h1>Members Leaderboard</h1><p>Top members by reputation and activity</p></div>
+
+<div class="panel glass">
+  <ul class="leaderboard">
+    <% members.forEach(function(m, i) { %>
+      <li class="leaderboard-item">
+        <span class="lb-rank"><%= i + 1 %></span>
+        <span class="avatar avatar-sm" style="background:<%= m.avatar_color %>"><%= m.username.charAt(0).toUpperCase() %></span>
+        <a href="<%= profileUrl(m.username) %>"><%= m.display_name || m.username %></a>
+        <span class="lb-score"><%= m.reputation %> rep · <%= m.post_count %> posts</span>
+      </li>
+    <% }); %>
+  </ul>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,69 @@
+<%- include('../partials/header') %>
+
+<div class="settings-layout">
+  <%- include('../partials/settings-nav') %>
+  <div class="settings-content">
+    <div class="settings-header">
+      <h1>Edit Profile</h1>
+      <p>Manage your avatar, bio, signature, and personal information</p>
+    </div>
+
+    <% if (success) { %><div class="alert alert-success toast-msg"><%= success %></div><% } %>
+    <% if (error) { %><div class="alert alert-error toast-msg"><%= error %></div><% } %>
+
+    <form action="/settings/profile" method="POST" class="card glass settings-form">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <div class="form-group">
+        <label>Avatar Color</label>
+        <div class="color-picker" id="colorPicker">
+          <% avatarColors.forEach(function(color) { %>
+            <label class="color-option <%= profile.avatar_color === color ? 'selected' : '' %>">
+              <input type="radio" name="avatar_color" value="<%= color %>" <%= profile.avatar_color === color ? 'checked' : '' %>>
+              <span class="color-swatch" style="background:<%= color %>"></span>
+            </label>
+          <% }); %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="display_name">Display Name</label>
+        <input type="text" id="display_name" name="display_name" value="<%= profile.display_name || '' %>" maxlength="50" placeholder="Optional display name">
+      </div>
+
+      <div class="form-group">
+        <label for="bio">About Me</label>
+        <textarea id="bio" name="bio" maxlength="500" rows="3" placeholder="Introduce yourself..."><%= profile.bio || '' %></textarea>
+        <p class="form-hint">Max 500 characters</p>
+      </div>
+
+      <div class="form-group">
+        <label for="signature">Signature</label>
+        <textarea id="signature" name="signature" maxlength="300" rows="2" placeholder="Appears under your posts"><%= profile.signature || '' %></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="banner_color">Banner Color</label>
+        <input type="color" id="banner_color" name="banner_color" value="<%= profile.banner_color || '#1a1a1a' %>">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="location">Location</label>
+          <input type="text" id="location" name="location" value="<%= profile.location || '' %>" maxlength="80" placeholder="Istanbul, TR">
+        </div>
+        <div class="form-group">
+          <label for="website">Website</label>
+          <input type="url" id="website" name="website" value="<%= profile.website || '' %>" placeholder="https://">
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+    <div style="margin-top:1rem;">
+      <a href="/member/export-data" class="btn btn-ghost">Export My Data</a>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,45 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <h1>Security Events</h1>
+  <p>XSS, brute force, rate limit, and suspicious requests</p>
+</div>
+
+<nav class="admin-nav">
+  <a href="/admin">Dashboard</a>
+  <a href="/admin/users">Users</a>
+  <a href="/admin/categories">Categories</a>
+  <a href="/admin/audit">Audit Log</a>
+  <a href="/admin/security" class="active">Security</a>
+</nav>
+
+<div class="panel">
+  <div class="panel-body table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Event Type</th>
+          <th>IP</th>
+          <th>Blocked</th>
+          <th>Details</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% events.forEach(function(ev) { %>
+          <tr>
+            <td><%= ev.id %></td>
+            <td><%= ev.event_type %></td>
+            <td><%= ev.ip_address || '—' %></td>
+            <td><% if (ev.blocked) { %><span class="badge-blocked">Yes</span><% } else { %><span class="badge-ok">No</span><% } %></td>
+            <td><%= ev.details ? JSON.stringify(ev.details).slice(0, 80) : '—' %></td>
+            <td><%= new Date(ev.created_at).toLocaleString('en-US') %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

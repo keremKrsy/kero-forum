@@ -1,0 +1,20 @@
+<%- include('../partials/header') %>
+
+<div class="page-header"><h1>System Health</h1></div>
+<%- include('../partials/admin-nav') %>
+
+<div class="stats-grid">
+  <div class="stat-card glass"><div class="stat-value"><%= Math.floor(uptime / 3600) %>h</div><div class="stat-label">Uptime</div></div>
+  <div class="stat-card glass"><div class="stat-value"><%= Math.round(memory.heapUsed / 1048576) %>MB</div><div class="stat-label">Heap Used</div></div>
+  <div class="stat-card glass"><div class="stat-value"><%= Math.round(dbSize / 1024) %>KB</div><div class="stat-label">Database</div></div>
+  <div class="stat-card glass"><div class="stat-value"><%= stats.openSessions %></div><div class="stat-label">Sessions</div></div>
+</div>
+
+<div class="panel glass" style="padding:1.5rem;">
+  <p><strong>Node:</strong> <%= nodeVersion %></p>
+  <p><strong>Platform:</strong> <%= platform %></p>
+  <p><strong>Users:</strong> <%= stats.users %> · <strong>Topics:</strong> <%= stats.topics %> · <strong>Posts:</strong> <%= stats.posts %></p>
+  <p><strong>Pending Reports:</strong> <%= stats.pendingReports %> · <strong>IP Bans:</strong> <%= stats.activeIpBans %> · <strong>Filters:</strong> <%= stats.activeWordFilters %></p>
+</div>
+
+<%- include('../partials/footer') %>

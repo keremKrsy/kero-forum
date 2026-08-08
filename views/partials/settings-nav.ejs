@@ -1,0 +1,39 @@
+<aside class="settings-sidebar">
+  <div class="settings-user-card">
+    <span class="avatar avatar-lg" style="background:<%= profile.avatar_color || '#f5f0e8' %>"><%= profile.username.charAt(0).toUpperCase() %></span>
+    <div>
+      <strong><%= profile.display_name || profile.username %></strong>
+      <span class="text-muted">@<%= profile.username %></span>
+    </div>
+  </div>
+  <nav class="settings-nav">
+    <a href="/settings/profile" class="<%= activeTab === 'profile' ? 'active' : '' %>">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Edit Profile
+    </a>
+    <a href="/settings/username" class="<%= activeTab === 'username' ? 'active' : '' %>">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+      Username
+    </a>
+    <a href="/settings/password" class="<%= activeTab === 'password' ? 'active' : '' %>">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Password
+    </a>
+    <a href="/settings/account" class="<%= activeTab === 'account' ? 'active' : '' %>">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      Email
+    </a>
+    <a href="/settings/privacy" class="<%= activeTab === 'privacy' ? 'active' : '' %>">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+      Privacy
+    </a>
+    <a href="/settings/bookmarks" class="<%= activeTab === 'bookmarks' ? 'active' : '' %>">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+      Bookmarks
+    </a>
+    <a href="<%= profileUrl(profile.username) %>" class="settings-nav-external">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+      View Profile
+    </a>
+  </nav>
+</aside>

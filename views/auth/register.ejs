@@ -1,0 +1,39 @@
+<%- include('../partials/header') %>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <h1>Kero-Forum Register</h1>
+    <p class="auth-subtitle">Join the community</p>
+
+    <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+    <form action="/auth/register" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required minlength="3" maxlength="32" pattern="[a-zA-Z0-9_]+" autocomplete="username">
+        <p class="form-hint">Letters, numbers, and underscore only</p>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required minlength="8" autocomplete="new-password">
+        <p class="form-hint">At least 8 characters</p>
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required minlength="8" autocomplete="new-password">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;">Create Account</button>
+    </form>
+
+    <p style="text-align:center;margin-top:1.25rem;color:var(--cream-muted);font-size:0.9rem;">
+      Already have an account? <a href="/auth/login">Sign in</a>
+    </p>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

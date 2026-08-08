@@ -1,0 +1,19 @@
+<nav class="admin-nav">
+  <a href="/admin" class="<%= currentPath === '/admin' ? 'active' : '' %>">Dashboard</a>
+  <a href="/admin/users" class="<%= currentPath === '/admin/users' ? 'active' : '' %>">Users</a>
+  <a href="/admin/categories" class="<%= currentPath === '/admin/categories' ? 'active' : '' %>">Categories</a>
+  <a href="/admin/reports" class="<%= currentPath === '/admin/reports' ? 'active' : '' %>">Reports</a>
+  <% if (hasRole('owner')) { %>
+    <a href="/admin/settings" class="<%= currentPath === '/admin/settings' ? 'active' : '' %>">Settings</a>
+    <a href="/admin/sessions" class="<%= currentPath === '/admin/sessions' ? 'active' : '' %>">Sessions</a>
+    <a href="/admin/backup" class="<%= currentPath === '/admin/backup' ? 'active' : '' %>">Backup</a>
+  <% } %>
+  <a href="/admin/ip-bans" class="<%= currentPath === '/admin/ip-bans' ? 'active' : '' %>">IP Bans</a>
+  <a href="/admin/filters" class="<%= currentPath === '/admin/filters' ? 'active' : '' %>">Filters</a>
+  <a href="/admin/health" class="<%= currentPath === '/admin/health' ? 'active' : '' %>">Health</a>
+  <a href="/admin/audit" class="<%= currentPath === '/admin/audit' ? 'active' : '' %>">Audit</a>
+  <a href="/admin/security" class="<%= currentPath === '/admin/security' ? 'active' : '' %>">Security</a>
+  <a href="/admin/export/audit">Export Audit</a>
+  <a href="/admin/export/security">Export Security</a>
+  <a href="/">Back to Forum</a>
+</nav>

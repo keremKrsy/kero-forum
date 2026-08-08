@@ -1,0 +1,33 @@
+<%- include('../partials/header') %>
+
+<div class="settings-layout">
+  <%- include('../partials/settings-nav') %>
+  <div class="settings-content">
+    <div class="settings-header">
+      <h1>Saved Topics</h1>
+      <p>Topics you saved to read later</p>
+    </div>
+
+    <div class="panel glass">
+      <% if (bookmarks.length === 0) { %>
+        <div class="empty-state">No saved topics yet. You can save topics from the topic page.</div>
+      <% } else { %>
+        <ul class="topic-list">
+          <% bookmarks.forEach(function(t) { %>
+            <li class="topic-item">
+              <div>
+                <div class="topic-title"><a href="/topic/<%= t.id %>"><%= t.title %></a></div>
+                <div class="topic-meta">
+                  <%= t.category_name %> · <a href="<%= profileUrl(t.username) %>"><%= t.username %></a>
+                  · <%= new Date(t.bookmarked_at).toLocaleDateString('en-US') %>
+                </div>
+              </div>
+            </li>
+          <% }); %>
+        </ul>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,50 @@
+<%- include('../partials/header') %>
+
+<div class="page-header"><h1>Site Settings</h1><p>Maintenance, registration, announcements, auto-lock</p></div>
+<%- include('../partials/admin-nav') %>
+<% if (msg) { %><div class="alert alert-success toast-msg"><%= msg %></div><% } %>
+
+<% if (settings.maintenance_mode === '1') { %>
+  <div class="alert alert-info">Maintenance mode is <strong>ON</strong> — visitors see the maintenance page. Owner/Admin can still browse.</div>
+<% } %>
+
+<form action="/admin/settings" method="POST" class="card glass settings-form">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+  <label class="toggle-item">
+    <div>
+      <strong>Maintenance Mode</strong>
+      <p class="form-hint">Blocks the public site. Owner &amp; Admin accounts still have access.</p>
+    </div>
+    <input type="checkbox" name="maintenance_mode" value="1" <%= settings.maintenance_mode === '1' ? 'checked' : '' %>>
+  </label>
+
+  <div class="form-group">
+    <label for="maintenance_message">Maintenance Page Message</label>
+    <input type="text" id="maintenance_message" name="maintenance_message" value="<%= settings.maintenance_message || '' %>" maxlength="500" placeholder="We are upgrading. Back soon!">
+  </div>
+
+  <label class="toggle-item">
+    <div><strong>Registration Open</strong></div>
+    <input type="checkbox" name="registration_open" value="1" <%= settings.registration_open !== '0' ? 'checked' : '' %>>
+  </label>
+
+  <div class="form-group">
+    <label for="site_announcement">Site Announcement Banner</label>
+    <input type="text" id="site_announcement" name="site_announcement" value="<%= settings.site_announcement || '' %>" maxlength="500">
+  </div>
+
+  <div class="form-group">
+    <label for="auto_lock_days">Auto-lock topics after (days, 0=off)</label>
+    <input type="number" id="auto_lock_days" name="auto_lock_days" value="<%= settings.auto_lock_days || '0' %>" min="0">
+  </div>
+
+  <div class="form-group">
+    <label for="blocked_email_domains">Blocked Email Domains (comma separated)</label>
+    <input type="text" id="blocked_email_domains" name="blocked_email_domains" value="<%= settings.blocked_email_domains || '' %>" placeholder="tempmail.com,spam.net">
+  </div>
+
+  <button type="submit" class="btn btn-primary">Save Settings</button>
+</form>
+
+<%- include('../partials/footer') %>

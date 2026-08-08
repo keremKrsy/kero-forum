@@ -1,0 +1,39 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <h1>Admin Dashboard</h1>
+  <p>Kero-Forum control center — 25 admin tools</p>
+</div>
+
+<%- include('../partials/admin-nav') %>
+
+<% if (msg) { %><div class="alert alert-success toast-msg"><%= msg %></div><% } %>
+<% if (error) { %><div class="alert alert-error toast-msg"><%= error %></div><% } %>
+
+<div class="stats-grid">
+  <div class="stat-card glass"><div class="stat-value"><%= stats.users %></div><div class="stat-label">Users</div></div>
+  <div class="stat-card glass"><div class="stat-value"><%= stats.topics %></div><div class="stat-label">Topics</div></div>
+  <div class="stat-card glass"><div class="stat-value"><%= stats.posts %></div><div class="stat-label">Posts</div></div>
+  <div class="stat-card glass"><div class="stat-value"><%= stats.pendingReports %></div><div class="stat-label">Reports</div></div>
+  <div class="stat-card glass"><div class="stat-value"><%= stats.activeIpBans %></div><div class="stat-label">IP Bans</div></div>
+  <div class="stat-card glass"><div class="stat-value"><%= stats.openSessions %></div><div class="stat-label">Sessions</div></div>
+</div>
+
+<div class="grid-2">
+  <div class="panel glass">
+    <div class="panel-header">Recent Audit</div>
+    <div class="panel-body table-wrap">
+      <table><thead><tr><th>Action</th><th>User</th><th>Time</th></tr></thead>
+      <tbody><% recentAudit.forEach(function(l) { %><tr><td><%= l.action %></td><td><%= l.username || '—' %></td><td><%= new Date(l.created_at).toLocaleString('en-US') %></td></tr><% }); %></tbody></table>
+    </div>
+  </div>
+  <div class="panel glass">
+    <div class="panel-header">Recent Security Events</div>
+    <div class="panel-body table-wrap">
+      <table><thead><tr><th>Event</th><th>IP</th><th>Blocked</th></tr></thead>
+      <tbody><% recentSecurity.forEach(function(e) { %><tr><td><%= e.event_type %></td><td><%= e.ip_address || '—' %></td><td><%= e.blocked ? 'Yes' : 'No' %></td></tr><% }); %></tbody></table>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

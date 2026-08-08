@@ -1,0 +1,50 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <h1><%= category.name %></h1>
+  <p><%= category.description %></p>
+</div>
+
+<div style="margin-bottom: 1rem;">
+  <% if (user && (!category.is_locked || hasRole('mod'))) { %>
+    <a href="/category/<%= category.slug %>/new" class="btn btn-primary">+ New Topic</a>
+  <% } else if (category.is_locked) { %>
+    <span class="alert alert-info" style="display:inline-block;margin:0;">This category is locked.</span>
+  <% } %>
+</div>
+
+<div class="panel">
+  <div class="panel-header">Topics</div>
+  <div class="panel-body">
+    <% if (topics.length === 0) { %>
+      <div class="empty-state">No topics in this category yet.</div>
+    <% } else { %>
+      <ul class="topic-list">
+        <% topics.forEach(function(t) { %>
+          <li class="topic-item">
+            <div>
+              <div class="topic-title">
+                <% if (t.is_pinned) { %><span class="pinned" title="Pinned">📌</span> <% } %>
+                <% if (t.is_locked) { %><span class="locked" title="Locked">🔒</span> <% } %>
+                <a href="/topic/<%= t.id %>"><%= t.title %></a>
+              </div>
+              <div class="topic-meta">
+                <span class="role-badge role-<%= t.author_role %>"><%= roleBadge(t.author_role) %></span>
+                <a href="<%= profileUrl(t.username) %>"><%= t.username %></a>
+                · <%= new Date(t.created_at).toLocaleDateString('en-US') %>
+              </div>
+            </div>
+            <div class="category-meta">
+              <%= t.reply_count %> replies<br>
+              <%= t.view_count %> views
+            </div>
+          </li>
+        <% }); %>
+      </ul>
+    <% } %>
+  </div>
+</div>
+
+<p style="margin-top:1rem;"><a href="/">← Home</a></p>
+
+<%- include('../partials/footer') %>

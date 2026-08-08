@@ -1,0 +1,83 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <h1>Category Management</h1>
+  <p>Create, edit, reorder, lock, and configure categories</p>
+</div>
+
+<%- include('../partials/admin-nav') %>
+
+<% if (msg) { %><div class="alert alert-success toast-msg"><%= msg %></div><% } %>
+<% if (error) { %><div class="alert alert-error toast-msg"><%= error %></div><% } %>
+
+<div class="card glass" style="margin-bottom:1.5rem;">
+  <h2>Create Category</h2>
+  <form action="/admin/categories" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="form-row">
+      <div class="form-group"><label>Name</label><input type="text" name="name" required minlength="2" maxlength="80"></div>
+      <div class="form-group"><label>Sort Order</label><input type="number" name="sort_order" value="0" min="0"></div>
+    </div>
+    <div class="form-group"><label>Description</label><input type="text" name="description" maxlength="500"></div>
+    <button type="submit" class="btn btn-primary">Create</button>
+  </form>
+</div>
+
+<div class="panel glass">
+  <div class="panel-header">All Categories</div>
+  <div class="panel-body">
+    <% categories.forEach(function(cat) { %>
+      <div class="category-admin-item">
+        <% if (editId === cat.id) { %>
+          <form action="/admin/categories/<%= cat.id %>/edit" method="POST" class="settings-form">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <div class="form-row">
+              <div class="form-group"><label>Name</label><input type="text" name="name" value="<%= cat.name %>" required></div>
+              <div class="form-group"><label>Sort</label><input type="number" name="sort_order" value="<%= cat.sort_order %>" min="0"></div>
+            </div>
+            <div class="form-group"><label>Description</label><input type="text" name="description" value="<%= cat.description %>"></div>
+            <div class="form-row">
+              <div class="form-group"><label>Slow Mode (sec)</label><input type="number" name="slow_mode_seconds" value="<%= cat.slow_mode_seconds || 0 %>" min="0"></div>
+              <div class="form-group"><label>Min Post Length</label><input type="number" name="min_post_length" value="<%= cat.min_post_length || 2 %>" min="1"></div>
+            </div>
+            <div class="form-group">
+              <label>Who Can Post</label>
+              <select name="post_permission">
+                <option value="all" <%= cat.post_permission !== 'mod' ? 'selected' : '' %>>Everyone</option>
+                <option value="mod" <%= cat.post_permission === 'mod' ? 'selected' : '' %>>Mods+ only</option>
+              </select>
+            </div>
+            <label class="toggle-item"><span>Locked category</span><input type="checkbox" name="is_locked" <%= cat.is_locked ? 'checked' : '' %>></label>
+            <div class="actions-row" style="margin-top:1rem;">
+              <button type="submit" class="btn btn-primary btn-sm">Save Changes</button>
+              <a href="/admin/categories" class="btn btn-ghost btn-sm">Cancel</a>
+            </div>
+          </form>
+        <% } else { %>
+          <div class="flex-between">
+            <div>
+              <h3><%= cat.name %> <span class="text-muted">(<%= cat.slug %>)</span></h3>
+              <p class="text-muted"><%= cat.description %> · <%= cat.topic_count %> topics · order <%= cat.sort_order %></p>
+              <p class="text-muted">Slow: <%= cat.slow_mode_seconds || 0 %>s · Min len: <%= cat.min_post_length || 2 %> · Post: <%= cat.post_permission || 'all' %> <%= cat.is_locked ? '· LOCKED' : '' %></p>
+            </div>
+            <div class="actions-row">
+              <a href="/admin/categories?edit=<%= cat.id %>" class="btn btn-ghost btn-sm">Edit</a>
+              <form action="/admin/categories/<%= cat.id %>/delete" method="POST" class="inline-form" onsubmit="return confirm('Delete category and all topics?')">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+              </form>
+              <% if (hasRole('owner')) { %>
+                <form action="/admin/categories/<%= cat.id %>/purge" method="POST" class="inline-form" onsubmit="return confirm('Delete ALL topics in this category?')">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <button type="submit" class="btn btn-danger btn-sm">Purge Topics</button>
+                </form>
+              <% } %>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    <% }); %>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

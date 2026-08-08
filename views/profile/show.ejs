@@ -1,0 +1,83 @@
+<%- include('../partials/header') %>
+
+<div class="profile-hero">
+  <div class="profile-banner"></div>
+  <div class="profile-header-content">
+    <span class="avatar avatar-xl profile-avatar" style="background:<%= profile.avatar_color || '#f5f0e8' %>"><%= profile.username.charAt(0).toUpperCase() %></span>
+    <div class="profile-info">
+      <h1><%= profile.display_name || profile.username %></h1>
+      <p class="profile-handle">@<%= profile.username %>
+        <span class="role-badge role-<%= profile.role %>"><%= roleBadge(profile.role) %></span>
+      </p>
+      <% if (profile.bio) { %><p class="profile-bio"><%= profile.bio %></p><% } %>
+      <div class="profile-meta-row">
+        <% if (profile.location) { %><span>📍 <%= profile.location %></span><% } %>
+        <% if (profile.website) { %><span><a href="<%= profile.website %>" target="_blank" rel="noopener">🔗 Website</a></span><% } %>
+        <% if (profile.show_email && profile.email) { %><span>✉ <%= profile.email %></span><% } %>
+        <span>📅 Joined on <%= new Date(profile.created_at).toLocaleDateString('en-US') %></span>
+      </div>
+    </div>
+    <div class="profile-actions">
+      <% if (isSelf) { %>
+        <a href="/settings/profile" class="btn btn-primary">Edit Profile</a>
+        <a href="/settings/password" class="btn btn-ghost">Settings</a>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<div class="stats-grid profile-stats">
+  <div class="stat-card glass"><div class="stat-value"><%= stats.topics %></div><div class="stat-label">Topics</div></div>
+  <div class="stat-card glass"><div class="stat-value"><%= stats.posts %></div><div class="stat-label">Posts</div></div>
+  <div class="stat-card glass"><div class="stat-value"><%= stats.views %></div><div class="stat-label">Views</div></div>
+  <div class="stat-card glass"><div class="stat-value"><%= stats.bookmarks %></div><div class="stat-label">Bookmarks</div></div>
+</div>
+
+<% if (profile.signature) { %>
+  <div class="card glass profile-signature">
+    <h3>Signature</h3>
+    <div class="post-content"><%- profile.signature %></div>
+  </div>
+<% } %>
+
+<div class="grid-2">
+  <div class="panel glass">
+    <div class="panel-header">Recent Topics</div>
+    <div class="panel-body">
+      <% if (topics.length === 0) { %>
+        <div class="empty-state">No topics created yet.</div>
+      <% } else { %>
+        <ul class="topic-list compact">
+          <% topics.forEach(function(t) { %>
+            <li class="topic-item">
+              <div>
+                <div class="topic-title"><a href="/topic/<%= t.id %>"><%= t.title %></a></div>
+                <div class="topic-meta"><%= t.category_name %> · <%= t.reply_count %> replies</div>
+              </div>
+            </li>
+          <% }); %>
+        </ul>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="panel glass">
+    <div class="panel-header">Recent Posts</div>
+    <div class="panel-body">
+      <% if (posts.length === 0) { %>
+        <div class="empty-state">No posts yet.</div>
+      <% } else { %>
+        <ul class="activity-list">
+          <% posts.forEach(function(p) { %>
+            <li class="activity-item">
+              <a href="/topic/<%= p.topic_id %>#post-<%= p.id %>"><%= p.topic_title %></a>
+              <span class="topic-meta"><%= new Date(p.created_at).toLocaleDateString('en-US') %></span>
+            </li>
+          <% }); %>
+        </ul>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

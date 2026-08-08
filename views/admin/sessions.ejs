@@ -1,0 +1,28 @@
+<%- include('../partials/header') %>
+
+<div class="page-header"><h1>Active Sessions</h1></div>
+<%- include('../partials/admin-nav') %>
+<% if (msg) { %><div class="alert alert-success toast-msg"><%= msg %></div><% } %>
+
+<div class="panel glass table-wrap">
+  <table>
+    <thead><tr><th>User</th><th>Expires</th><th>Session ID</th><th></th></tr></thead>
+    <tbody>
+      <% sessions.forEach(function(s) { %>
+        <tr>
+          <td><%= s.user ? s.user.username + ' (' + s.user.role + ')' : 'Guest' %></td>
+          <td><%= s.expired ? new Date(s.expired).toLocaleString('en-US') : '—' %></td>
+          <td><code style="font-size:0.75rem"><%= s.sid.slice(0,16) %>…</code></td>
+          <td>
+            <form action="/admin/sessions/<%= s.sid %>/revoke" method="POST" class="inline-form">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button type="submit" class="btn btn-danger btn-sm">Revoke</button>
+            </form>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../partials/footer') %>

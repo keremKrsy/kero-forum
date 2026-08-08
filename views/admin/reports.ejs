@@ -1,0 +1,25 @@
+<%- include('../partials/header') %>
+
+<div class="page-header"><h1>Abuse Reports</h1></div>
+<%- include('../partials/admin-nav') %>
+<% if (msg) { %><div class="alert alert-success toast-msg"><%= msg %></div><% } %>
+
+<div class="panel glass">
+  <% if (reports.length === 0) { %><div class="empty-state">No pending reports.</div><% } %>
+  <% reports.forEach(function(r) { %>
+    <div class="category-admin-item">
+      <p><strong>#<%= r.id %></strong> · <%= r.target_type %> #<%= r.target_id %> · by <%= r.reporter_username %></p>
+      <p><%= r.reason %></p>
+      <% if (r.details) { %><p class="text-muted"><%= r.details %></p><% } %>
+      <form action="/admin/reports/<%= r.id %>/resolve" method="POST" class="actions-row">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="hidden" name="status" value="resolved">
+        <input type="text" name="note" placeholder="Resolution note" style="width:180px;padding:0.4rem;">
+        <button type="submit" class="btn btn-primary btn-sm">Resolve</button>
+        <button type="submit" formaction="/admin/reports/<%= r.id %>/resolve" name="status" value="dismissed" class="btn btn-ghost btn-sm">Dismiss</button>
+      </form>
+    </div>
+  <% }); %>
+</div>
+
+<%- include('../partials/footer') %>

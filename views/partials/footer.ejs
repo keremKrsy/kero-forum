@@ -1,0 +1,29 @@
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span class="logo-mark sm">K</span>
+        <strong><%= siteName %></strong>
+        <p>Premium secure forum experience</p>
+      </div>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/search">Search</a>
+        <% if (user) { %>
+          <a href="/settings/profile">Settings</a>
+          <a href="<%= profileUrl(user.username) %>">Profile</a>
+        <% } else { %>
+          <a href="/auth/login">Login</a>
+          <a href="/auth/register">Register</a>
+        <% } %>
+      </div>
+      <div class="footer-meta">
+        <p>&copy; <%= new Date().getFullYear() %> <%= siteName %></p>
+        <p class="footer-tags">XSS · SQLi · Brute Force · DDoS protected</p>
+      </div>
+    </div>
+  </footer>
+  <script src="/js/kero.js"></script>
+</body>
+</html>

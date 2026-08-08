@@ -1,0 +1,91 @@
+<%- include('../partials/header') %>
+
+<section class="hero">
+  <div class="hero-content">
+    <span class="hero-badge">Kero-Forum v2</span>
+    <h1>Premium Forum<br><span class="text-gradient">Experience</span></h1>
+    <p>A secure, trackable, and modern community platform with profile management, notifications, search, and more.</p>
+    <div class="hero-actions">
+      <% if (user) { %>
+        <a href="/settings/profile" class="btn btn-primary btn-lg">Edit My Profile</a>
+        <a href="<%= profileUrl(user.username) %>" class="btn btn-ghost btn-lg">My Profile</a>
+      <% } else { %>
+        <a href="/auth/register" class="btn btn-primary btn-lg">Join Now</a>
+        <a href="/auth/login" class="btn btn-ghost btn-lg">Login</a>
+      <% } %>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><span><%= stats.users %></span><small>Members</small></div>
+    <div class="hero-stat"><span><%= stats.topics %></span><small>Topics</small></div>
+    <div class="hero-stat"><span><%= stats.posts %></span><small>Posts</small></div>
+  </div>
+</section>
+
+<div class="stats-grid">
+  <div class="stat-card glass animate-in"><div class="stat-value"><%= stats.users %></div><div class="stat-label">Total Members</div></div>
+  <div class="stat-card glass animate-in delay-1"><div class="stat-value"><%= stats.topics %></div><div class="stat-label">Topics Created</div></div>
+  <div class="stat-card glass animate-in delay-2"><div class="stat-value"><%= stats.posts %></div><div class="stat-label">Posts Written</div></div>
+  <div class="stat-card glass animate-in delay-3"><div class="stat-value"><%= stats.categories %></div><div class="stat-label">Categories</div></div>
+</div>
+
+<div class="grid-2 home-grid">
+  <div class="panel glass">
+      <div class="panel-header">📂 Categories</div>
+    <div class="panel-body">
+      <ul class="category-list">
+        <% categories.forEach(function(cat) { %>
+          <li class="category-item">
+            <div class="category-info">
+              <h3><a href="/category/<%= cat.slug %>"><%= cat.name %></a></h3>
+              <p><%= cat.description %></p>
+            </div>
+            <div class="category-meta">
+              <strong><%= cat.topic_count %></strong> topics
+            </div>
+          </li>
+        <% }); %>
+      </ul>
+    </div>
+  </div>
+
+  <div>
+    <div class="panel glass" style="margin-bottom:1.5rem;">
+      <div class="panel-header">🔥 Latest Topics</div>
+      <div class="panel-body">
+        <% if (recentTopics.length === 0) { %>
+          <div class="empty-state">No topics yet.</div>
+        <% } else { %>
+          <ul class="topic-list compact">
+            <% recentTopics.forEach(function(t) { %>
+              <li class="topic-item">
+                <div>
+                  <div class="topic-title"><a href="/topic/<%= t.id %>"><%= t.title %></a></div>
+                  <div class="topic-meta"><%= t.category_name %> · <a href="<%= profileUrl(t.username) %>"><%= t.username %></a></div>
+                </div>
+              </li>
+            <% }); %>
+          </ul>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="panel glass">
+      <div class="panel-header">🏆 Most Active Members</div>
+      <div class="panel-body">
+        <ul class="leaderboard">
+          <% leaderboard.forEach(function(u, i) { %>
+            <li class="leaderboard-item">
+              <span class="lb-rank"><%= i + 1 %></span>
+              <span class="avatar avatar-sm" style="background:<%= u.avatar_color %>"><%= u.username.charAt(0).toUpperCase() %></span>
+              <a href="<%= profileUrl(u.username) %>"><%= u.display_name || u.username %></a>
+              <span class="lb-score"><%= u.post_count %> posts</span>
+            </li>
+          <% }); %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

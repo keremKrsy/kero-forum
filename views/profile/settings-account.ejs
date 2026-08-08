@@ -1,0 +1,28 @@
+<%- include('../partials/header') %>
+
+<div class="settings-layout">
+  <%- include('../partials/settings-nav') %>
+  <div class="settings-content">
+    <div class="settings-header">
+      <h1>Email Account</h1>
+      <p>Update your email address</p>
+    </div>
+    <% if (success) { %><div class="alert alert-success toast-msg"><%= success %></div><% } %>
+    <% if (error) { %><div class="alert alert-error toast-msg"><%= error %></div><% } %>
+
+    <form action="/settings/account" method="POST" class="card glass settings-form">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" value="<%= profile.email %>" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="password">Current Password (verification)</label>
+        <input type="password" id="password" name="password" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-primary">Update Email</button>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
